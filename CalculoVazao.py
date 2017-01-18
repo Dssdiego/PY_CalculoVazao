@@ -1,7 +1,8 @@
 #--------------------------------------------------
 #   Trabalho de Automação Industrial
 #   Software Desenvolvido para Calculo da Vazão
-#   Autores:
+#   Grupo:
+#       Arthur Almeida,
 #       Guilherme Guedes,
 #       Larissa Rodrigues,
 #       Lucas Lemos,
@@ -14,7 +15,6 @@
 #
 #   "v_" -> Variáveis
 #   "p_" -> Parâmetros de Funções
-#   "r_" -> Resultados
 #
 #--------------------------------------------------
 
@@ -26,7 +26,7 @@ import pandas as pd
 import numpy as np
 
 # Realizando a leitura do arquivo ".csv"
-csv = pd.read_csv('Arquivo.csv', sep=';')
+csv = pd.read_csv('Teste-Prof.csv', sep=';')
 
 # "Jogando" os valores do csv em um Array para os valores de Tempo
 v_Tempo = csv['Tempo'].values
@@ -79,20 +79,38 @@ p2 = calculaDensidade(t1)
 Vesc = calculaVesc(P,p2)
 Q = calculaVazaoVEsc(Vesc)
 VM = calculaVazaoMassica(Q,p2)
+VMA = [] #Começa array vazio para ir adicionando os elementos
 
-#print('Velocidade de Escoamento:')
-#print(calcVelocEscoamento(v_Pressao))
+for i in range(len(VM)):
+  if i == VM[0]:
+    VMA.append(VM[0])
+  else:
+    VMA.append((VM[i] + VM[i-1]) * 1000)
+   
+print('Saída de Dados:\n')    
 
-print('Q')
-print(Q)
+print('P:')
+print(P)
+
+print('t1:')
+print(t1)
 
 print('p2')
 print(p2)
 
+print('Vesc:')
+print(Vesc)
+
+print('Q')
+print(Q)
+
 print('VM:')
 print (VM)
 
-# Gráfico 1
+print('VMA:')
+print(VMA)
+
+# Gráfico 1 - Vazão Mássica vs Tempo
 
 plt.figure(1)
 plt.grid(True)
@@ -100,7 +118,15 @@ plt.plot(v_Tempo,VM, 'k')
 plt.xlabel('Tempo (s)')
 plt.ylabel('Vazão Mássica (kg/s)', multialignment='center')
 
-# Gráfico 2
+# Gráfico 2 - Vazão Total para Atmosfera vs Tempo
+
+plt.figure(2)
+plt.grid(True)
+plt.plot(v_Tempo,VMA, 'k')
+plt.xlabel('Tempo (s)')
+plt.ylabel('Vazão Total para a Atmosfera (kg)', multialignment='center')
+
+# Gráfico 2 - Vazão Mássica/Temperatura vs Tempo
 
 fig, vm = plt.subplots()
 plt.grid(True)
@@ -116,5 +142,6 @@ temp.set_ylabel('Temperatura (ºC)', color='r')
 fig.tight_layout()
 
 
+# Mostra os gráficos
 plt.show()
 
