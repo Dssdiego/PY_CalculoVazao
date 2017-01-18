@@ -92,9 +92,29 @@ print(p2)
 print('VM:')
 print (VM)
 
-plt.plot(v_Tempo,VM)
+# Gráfico 1
+
+plt.figure(1)
+plt.grid(True)
+plt.plot(v_Tempo,VM, 'k')
 plt.xlabel('Tempo (s)')
 plt.ylabel('Vazão Mássica (kg/s)', multialignment='center')
+
+# Gráfico 2
+
+fig, vm = plt.subplots()
+plt.grid(True)
+
+vm.plot(v_Tempo,VM, 'k')
+vm.set_xlabel('Tempo (s)')
+vm.set_ylabel('Vazão Mássica (kg/s)', multialignment='center')
+
+temp = vm.twinx()
+temp.plot(v_Tempo, v_Temperatura, 'r')
+temp.set_ylabel('Temperatura (ºC)', color='r')
+
+fig.tight_layout()
+
 
 plt.show()
 
