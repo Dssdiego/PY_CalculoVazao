@@ -19,12 +19,11 @@
 #--------------------------------------------------
 
 # Importando a biblioteca 'matplotlib' para a plotagem dos gráficos
-import matplotlib as matplotlib
 import matplotlib.pyplot as plt
 # Importando a biblioteca 'pandas' (Python Data Analysis Library) para leitura do arquivo ".csv"
 import pandas as pd
-# Importando a biblioteca 'math' para executar contas matemáticas (como Raiz Quadrada,  etc)
-import math
+# Importando a biblioteca 'numpy' para executar contas matemáticas (como Raiz Quadrada,  etc)
+import numpy as np
 
 # Realizando a leitura do arquivo ".csv"
 csv = pd.read_csv('Arquivo.csv', sep=';')
@@ -39,64 +38,61 @@ v_Temperatura = csv['Temperatura'].values
 
 # Definição de Funções - Primeiro Sensor
 
-# f(P) = 0,0125 x P
-def funcaoDePressao (p_Pressao):
-    return 0.0125 * p_Pressao
+# Cálculo da Pressão em Função da Tensão
+# 6,227222708329802 x V
+def calculaPressao (p_Tensao):
+    return 6.227222708329802 * p_Tensao
     
-# Função que calcula a Velocidade de Escoamento
-# V = \sqrt{0.5 x P}
-def calcVelocEscoamento (p_FuncPressao):
-    return math.sqrt(0.5) * p_FuncPressao
+# Cálculo da Velocidade de Escoamento
+# V = \sqrt{2P / p2}
+def calculaVesc (p_Pressao, p_Densidade):
+    return np.sqrt((2 * p_Pressao) / p_Densidade)
 
 # Q = 0,28274333882308139146163790449516 x V
-def calcValorQ (p_Velocidade):
-    return 0.28274333882308139146163790449516 * p_Velocidade
+def calculaVazaoVEsc (p_Vesc):
+    return 0.07068583470577034786540947612379 * p_Vesc
 
     
 # Definição de Funções - Segundo Sensor
 
-# f(T) = 2,62 x T + 266,687
-def funcaoDeTemperatura (p_Temp):
-    return 2.62 * p_Temp + 266.687
+# T(R) = 2,62 x R + 266,687
+def calculaTemperatura (p_Resistencia):
+    return 2.62 * p_Resistencia + 266.687
     
 # D = (1,2754 x 293,15) / (t1) 
-def calcValorD (p_FuncTemp):
-    return ((1.2754 * 293.15) / p_FuncTemp)
+def calculaDensidade (p_Temp):
+    return ((1.2754 * 293.15) / p_Temp)
     
     
 # Definição de Funções - Resultados
 
 # Função que calcula a Vazão Mássica
-# @param Q [Valores do Primeiro Sensor]
-# @param D [Valores do Segundo Sensor]
-def calculaVazaoMassica (Q,D):
-    return Q*D
+def calculaVazaoMassica (p_Vazao,p_Densidade):
+    return p_Vazao * p_Densidade
    
     
 # Realização das Contas 
-    
-v_FuncaoP = funcaoDePressao(v_Pressao)
-v_VelEscoamento = calcVelocEscoamento(v_FuncaoP)
-v_Q = calcValorQ(v_VelEscoamento)
 
-v_FuncaoT = funcaoDeTemperatura(v_Temperatura)
-v_D = calcValorD(v_FuncaoT)
-
-v_VM = calculaVazaoMassica(v_Q, v_D)
+P = calculaPressao(v_Pressao)
+t1 = calculaTemperatura(v_Temperatura)
+p2 = calculaDensidade(t1)
+Vesc = calculaVesc(P,p2)
+Q = calculaVazaoVEsc(Vesc)
+VM = calculaVazaoMassica(Q,p2)
 
 #print('Velocidade de Escoamento:')
 #print(calcVelocEscoamento(v_Pressao))
 
 print('Q')
-print(v_Q)
+print(Q)
 
-print('D')
-print(v_D)
+print('p2')
+print(p2)
 
 print('VM:')
-print (v_VM)
+print (VM)
 
-plt.plot(v_Tempo,v_VM)
+plt.plot(v_Tempo,VM)
 plt.xlabel('Tempo (s)')
 plt.ylabel('Vazão Mássica (kg/s)', multialignment='center')
 
