@@ -24,9 +24,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 # Importando a biblioteca 'numpy' para executar contas matemáticas (como Raiz Quadrada,  etc)
 import numpy as np
+# Importando a biblioteca 'sys' para ler o arquivo passado na linha de comando
+import sys
 
-# Realizando a leitura do arquivo ".csv"
-csv = pd.read_csv('Teste-Prof.csv', sep=';')
+# Realizando a leitura do arquivo ".csv" na posição 1 (parâmetro passado na linha de comando)
+csv = pd.read_csv(sys.argv[1], sep=';')
 
 # "Jogando" os valores do csv em um Array para os valores de Tempo
 v_Tempo = csv['Tempo'].values
@@ -79,13 +81,13 @@ p2 = calculaDensidade(t1)
 Vesc = calculaVesc(P,p2)
 Q = calculaVazaoVEsc(Vesc)
 VM = calculaVazaoMassica(Q,p2)
-VMA = [] #Começa array vazio para ir adicionando os elementos
+VMA = [] #Vazão Mássica para a Atmosfera
 
 for i in range(len(VM)):
   if i == VM[0]:
     VMA.append(VM[0])
   else:
-    VMA.append((VM[i] + VM[i-1]) * 1000)
+    VMA.append(VM[i] + VM[i-1])
    
 print('Saída de Dados:\n')    
 
@@ -112,7 +114,7 @@ print(VMA)
 
 # Gráfico 1 - Vazão Mássica vs Tempo
 
-plt.figure(1)
+plt.figure('Vazão Mássica vs Tempo')
 plt.grid(True)
 plt.plot(v_Tempo,VM, 'k')
 plt.xlabel('Tempo (s)')
@@ -120,13 +122,13 @@ plt.ylabel('Vazão Mássica (kg/s)', multialignment='center')
 
 # Gráfico 2 - Vazão Total para Atmosfera vs Tempo
 
-plt.figure(2)
+plt.figure('Vazão Total para Atmosfera vs Tempo')
 plt.grid(True)
 plt.plot(v_Tempo,VMA, 'k')
 plt.xlabel('Tempo (s)')
 plt.ylabel('Vazão Total para a Atmosfera (kg)', multialignment='center')
 
-# Gráfico 2 - Vazão Mássica/Temperatura vs Tempo
+# Gráfico 3 - Vazão Mássica/Temperatura vs Tempo
 
 fig, vm = plt.subplots()
 plt.grid(True)
@@ -140,7 +142,6 @@ temp.plot(v_Tempo, v_Temperatura, 'r')
 temp.set_ylabel('Temperatura (ºC)', color='r')
 
 fig.tight_layout()
-
 
 # Mostra os gráficos
 plt.show()
